@@ -29,8 +29,17 @@ class NodoView(APIView):
     
         
     def get(self,request, *args, **kwargs):
-        nodo:Nodo = request.args.get('nodo')
-        nodo = get_nodo(nodo)
+        nodo_nombre = request.GET.get('nodo')
+        # Validar si el parámetro fue proporcionado
+        if not nodo_nombre:
+            return JsonResponse({'error': 'Nodo no especificado'}, status=400)
+
+        nodo: Nodo = get_nodo(nodo_nombre)
+        
+        # Verificar si el nodo existe
+        if not nodo:
+            return JsonResponse({'error': f'El nodo "{nodo_nombre}" no existe'}, status=404)
+        
         la = nodo.get_lista_adyacencia()
         adyacentes = []
         while la:
