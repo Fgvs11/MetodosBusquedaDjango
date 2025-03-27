@@ -34,20 +34,19 @@ class NodoView(APIView):
         if not nodo_nombre:
             return JsonResponse({'error': 'Nodo no especificado'}, status=400)
 
-        nodo: Nodo = get_nodo(nodo_nombre)
-        
+        inicio: Nodo = get_nodo(nodo_nombre)
         # Verificar si el nodo existe
-        if not nodo:
+        if not inicio:
             return JsonResponse({'error': f'El nodo "{nodo_nombre}" no existe'}, status=404)
         
-        la = nodo.get_lista_adyacencia()
+        la = inicio.get_lista_adyacencia()
         adyacentes = []
         while la:
             nodo = la.get_nodo_adyacente()
             adyacentes.append([nodo.informacion, la.peso])
             la = la.get_siguiente_adyacente()
         print(adyacentes)
-        return JsonResponse({'nombre': nodo.informacion, "adyacentes":adyacentes})
+        return JsonResponse({'nombre': inicio.informacion, "adyacentes":adyacentes})
     
     def post(self,request):
         data = request.data
@@ -61,6 +60,7 @@ class NodoView(APIView):
         # answer = []
         # peso = []
         camino = metodo(nodoInicial,nodoFinal)
+        print(camino)
         peso = round(getTiempo(camino.copy()),2)
         answer = []
         for i in range(1,len(camino)):
