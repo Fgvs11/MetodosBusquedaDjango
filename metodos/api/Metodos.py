@@ -172,50 +172,33 @@ def aEstrella(edoInicial: Nodo, edoFinal: Nodo):
 
     return [nodo.informacion for nodo in camino[::-1]]
 
-def hillClimbing(edoInicial: Nodo, edoFinal: Nodo, max_reinicios=5):
+
+
+def hillClimbing(edoInicial: Nodo, edoFinal: Nodo):
     actual = edoInicial
     camino = [actual]
-    visitados = set()  # Para evitar ciclos
-    reinicios = 0
 
     while actual != edoFinal:
-        visitados.add(actual)  # Marca el nodo como visitado
-
         hijo = actual.get_lista_adyacencia()
         mejor_hijo = None
         mejor_h = float('inf')
 
-        # Iterar sobre la lista de adyacencia
         while hijo:
             nodo_hijo = hijo.get_nodo_adyacente()
-
-            # Evitar nodos ya visitados
-            if nodo_hijo in visitados:
-                hijo = hijo.get_siguiente_adyacente()
-                continue
-
             h_n = heuristica(nodo_hijo, edoFinal)
 
-            # Buscar el mejor hijo no visitado
             if h_n < mejor_h:
                 mejor_h = h_n
                 mejor_hijo = nodo_hijo
 
             hijo = hijo.get_siguiente_adyacente()
 
-        # Si no hay mejor hijo o llegamos a un máximo local
-        if mejor_hijo is None or heuristica(actual, edoFinal) <= mejor_h:
-            reinicios += 1
-            if reinicios >= max_reinicios:
-                break  # Termina si alcanza el máximo de reinicios
-            # Reinicia desde un nodo aleatorio para escapar del máximo local
-            actual = random.choice(camino)
-            continue
+        if mejor_hijo is None or heuristica(edoInicial, edoFinal) <= mejor_h:
+            break
 
         actual = mejor_hijo
         camino.append(actual)
 
-    # Devolver solo la información de cada nodo recorrido
     return [nodo.informacion for nodo in camino]
 
 def heuristica(edoInicial:Nodo, edoFinal:Nodo):
