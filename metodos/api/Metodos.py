@@ -173,7 +173,6 @@ def aEstrella(edoInicial: Nodo, edoFinal: Nodo):
     return [nodo.informacion for nodo in camino[::-1]]
 
 
-
 def hillClimbing(edoInicial: Nodo, edoFinal: Nodo):
     actual = edoInicial
     camino = [actual]
